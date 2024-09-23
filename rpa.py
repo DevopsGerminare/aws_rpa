@@ -3,6 +3,9 @@ import psycopg2
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # Configurações do Selenium
 chrome_options = Options()
@@ -13,8 +16,11 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 driver = webdriver.Chrome(options=chrome_options)
 driver.get('https://www.google.com/search?q=dolar')
 
-# Capturando valor do dólar
-dolar_element = driver.find_element(by='xpath', value='//*[@id="knowledge-currency__updatable-data-column"]/div[1]/div[2]/span[1]')
+# Configurando WebDriverWait
+wait = WebDriverWait(driver, 10)  # Aguarda até 10 segundos
+
+# Capturando valor do dólar com espera explícita
+dolar_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="knowledge-currency__updatable-data-column"]/div[1]/div[2]/span[1]')))
 dolar = float(dolar_element.text.replace(',', '.'))
 
 # Capturando data e hora
